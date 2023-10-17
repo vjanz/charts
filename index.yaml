@@ -1,0 +1,31 @@
+apiVersion: v1
+entries:
+  django:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2023-10-17T12:17:16.954117215Z"
+    description: A Helm chart for django applications
+    digest: baacc34795781676aaf76d34bc4648bddfb4dbeb22cd5aff2e4a163f1c3e3b19
+    maintainers:
+    - email: valon.januzaj98@gmail.com
+      name: Valon Januzaj
+    name: django
+    type: application
+    urls:
+    - https://github.com/vjanz/charts/releases/download/django-0.1.0/django-0.1.0.tgz
+    version: 0.1.0
+  tools:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2023-10-17T12:17:17.157585942Z"
+    description: A Helm chart to bootstrap cluster with necessary tools
+    digest: 2edba399ac8bef23b6bd27860c211f96a88cd9ed75ae199da4ce1fb17eb38d79
+    maintainers:
+    - email: valon.januzaj98@gmail.com
+      name: Valon Januzaj
+    name: tools
+    type: application
+    urls:
+    - https://github.com/vjanz/charts/releases/download/tools-0.1.0/tools-0.1.0.tgz
+    version: 0.1.0
+generated: "2023-10-17T12:17:17.157596542Z"
