@@ -5,6 +5,10 @@ global:
       server: "https://kubernetes.default.svc"
     project: default
 
+keda:
+  enabled: false
+  namespace: keda
+  values: { }
 
 nginx:
   enabled: false
