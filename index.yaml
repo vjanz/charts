@@ -17,6 +17,19 @@ entries:
   tools:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2023-10-17T12:52:55.395247284Z"
+    description: A Helm chart to bootstrap cluster with necessary tools
+    digest: dc5d9b68ae122e3cf4d2fa9b5d8d0455cba132ade1bfbf5f3e72476e3cfed3b8
+    maintainers:
+    - email: valon.januzaj98@gmail.com
+      name: Valon Januzaj
+    name: tools
+    type: application
+    urls:
+    - https://github.com/vjanz/charts/releases/download/tools-0.1.1/tools-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2023-10-17T12:17:17.157585942Z"
     description: A Helm chart to bootstrap cluster with necessary tools
     digest: 2edba399ac8bef23b6bd27860c211f96a88cd9ed75ae199da4ce1fb17eb38d79
@@ -28,4 +41,4 @@ entries:
     urls:
     - https://github.com/vjanz/charts/releases/download/tools-0.1.0/tools-0.1.0.tgz
     version: 0.1.0
-generated: "2023-10-17T12:17:17.157596542Z"
+generated: "2023-10-17T12:52:55.395257784Z"
