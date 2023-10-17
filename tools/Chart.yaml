@@ -1,9 +1,0 @@
-apiVersion: v2
-name: tools
-description: A Helm chart to bootstrap cluster with necessary tools
-type: application
-version: 0.1.0
-appVersion: "1.16.0"
-maintainers:
-  - name: Valon Januzaj
-    email: valon.januzaj98@gmail.com
