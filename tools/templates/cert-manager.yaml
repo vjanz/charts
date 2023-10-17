@@ -1,0 +1,34 @@
+{{- if .Values.certManager.enabled }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cert-manager
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    helm.sh/hook-weight: "-5"
+spec:
+  destination:
+    namespace: {{ .Values.certManager.namespace }}
+    server: {{ .Values.global.application.cluster.server }}
+  project: {{ .Values.global.application.project }}
+  source:
+    chart: cert-manager
+    helm:
+      valueFiles:
+        - values.yaml
+      {{- with .Values.certManager.values }}
+      values: |-
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
+    repoURL: https://charts.jetstack.io
+    targetRevision: 1.13.1
+  syncPolicy:
+    automated:
+      allowEmpty: true
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+{{- end }}

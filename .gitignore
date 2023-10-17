@@ -1,0 +1,7 @@
+venv
+.idea/
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr

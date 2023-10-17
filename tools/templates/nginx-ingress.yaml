@@ -1,0 +1,32 @@
+{{- if .Values.nginx.enabled }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nginx-ingress
+  namespace: default
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: {{ .Values.nginx.namespace }}
+    server: {{ .Values.global.application.cluster.server }}
+  project: {{ .Values.global.application.project }}
+  source:
+    chart: nginx-ingress-controller
+    helm:
+      valueFiles:
+        - values.yaml
+      {{- with .Values.nginx.values }}
+      values: |-
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
+    repoURL: https://charts.bitnami.com/bitnami
+    targetRevision: 9.9.0
+  syncPolicy:
+    automated:
+      allowEmpty: true
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+{{- end }}

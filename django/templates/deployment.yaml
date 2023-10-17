@@ -1,0 +1,101 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "django.fullname" . }}
+  labels:
+    {{- include "django.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
+  selector:
+    matchLabels:
+      {{- include "django.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "django.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: {{ include "django.fullname" . }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "django.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{ if .Values.collect_static.enabled }}
+      initContainers:
+        - name: {{ .Values.collect_static.name | quote }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: IfNotPresent
+          command: [ "/bin/sh" ]
+          args:
+            - -c
+            - >-
+                  {{ .Values.collect_static.command }}
+          {{- if or .Values.envSecrets .Values.envConfigs }}
+          envFrom:
+            {{- if .Values.envSecrets }}
+            - secretRef:
+                name: env-secrets
+            {{- end }}
+            {{- if .Values.envConfigs }}
+            - configMapRef:
+                name: env-configmap
+            {{- end }}
+          {{- end }}
+          volumeMounts:
+            - name: shared
+              mountPath: {{ .Values.data.staticfiles }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: IfNotPresent
+          {{-  with .Values.command }}
+          command: [ "/bin/sh" ]
+          args:
+            - -c
+            - >-
+                  {{ . }}
+          {{- end }}
+          {{- include "django.envVariables" . | nindent 10 }}
+          ports:
+            - containerPort: {{ .Values.image.containerPort }}
+              protocol: TCP
+        {{- with .Values.probes }}
+          {{- if .liveness.enabled }}
+          livenessProbe:
+            httpGet:
+              path: {{ .liveness.path }}
+              port: {{ $.Values.image.containerPort }}
+          {{- end }}
+          {{- if .readiness.enabled }}
+          readinessProbe:
+            httpGet:
+              path: {{ .readiness.path }}
+              port: {{ $.Values.image.containerPort }}
+          {{- end }}
+        {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
